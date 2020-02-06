@@ -2,25 +2,25 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-//mainの変数群
+//mainに関する定義・変数宣言
 #define MAXOP 100
 #define NUMBER '0'
 
-int getop (char []); 
-void push (double);
-double pop (void);
+int getop(char[]);
+void push(double);
+double pop(void);
 
-//push/popの変数群
+//push・popに関数する定義・変数宣言
 #define MAXVAL 100
 
 int sp = 0;
 double val[MAXVAL];
 
-//getopの変数群
+//getopに関数する定義・変数宣言
 int getch(void);
 void ungetch(int);
 
-//(un)getchの変数群
+//(un)getchに関数する定義・変数宣言
 #define BUFSIZE 100
 
 char buf[BUFSIZE];
@@ -28,9 +28,9 @@ int bufp = 0;
 
 #define MAXCHAR 26
 
-int main () 
+int main()
 {
-	int type, number, charnumber,flag;
+	int type, number, charnumber, flag;
 	double op2;
 	char s[MAXOP];
 	char i[MAXCHAR];
@@ -40,55 +40,55 @@ int main ()
 	{
 		switch (type)
 		{
-			case 'W':
-				charnumber = pop();
-				nm[number] = charnumber;
-				++number;
-				break;
-			case 'R':
-				flag = 1;
-				break;
-			case NUMBER:
-				push(atof(s));
-				break;
-			case '+':
-				push(pop() + pop());
-				break;
-			case '*':
-				push(pop() * pop());
-				break;
-			case '-':
-				op2 = pop();
-				push(pop() - op2);
-				break;
-			case '/':
-				op2 = pop();
-				if (op2 != 0.0)
-				{
-					push (pop() / op2);
-				}
-				else
-				{
-					printf("error: zero divisor\n");
-				}
-				break;
-			case '%':
-				op2 = pop();
-				if (op2 != 0.0)
-				{
-					int opopfrom = pop();
-					int opopto = op2;
-					push (opopfrom % opopto);
-				}
-				else
-				{
-					printf("error: zero divisor\n");
-				}
-				break;
-			case '\n':
-				printf("\t%.8g\n", pop());
-				break;
-			default:
+		case 'W':
+			charnumber = pop();
+			nm[number] = charnumber;
+			++number;
+			break;
+		case 'R':
+			flag = 1;
+			break;
+		case NUMBER:
+			push(atof(s));
+			break;
+		case '+':
+			push(pop() + pop());
+			break;
+		case '*':
+			push(pop() * pop());
+			break;
+		case '-':
+			op2 = pop();
+			push(pop() - op2);
+			break;
+		case '/':
+			op2 = pop();
+			if (op2 != 0.0)
+			{
+				push(pop() / op2);
+			}
+			else
+			{
+				printf("error: zero divisor\n");
+			}
+			break;
+		case '%':
+			op2 = pop();
+			if (op2 != 0.0)
+			{
+				int opopfrom = pop();
+				int opopto = op2;
+				push(opopfrom % opopto);
+			}
+			else
+			{
+				printf("error: zero divisor\n");
+			}
+			break;
+		case '\n':
+			printf("\t%.8g\n", pop());
+			break;
+		default:
 			if (flag == 1)
 			{
 				int search;
@@ -100,15 +100,16 @@ int main ()
 						break;
 					}
 				}
-			}	
+			}
 			else if ('a' <= type && type <= 'z')
 			{
 				i[number] = type;
-				printf("a");
-			} else {
-				printf("error: unknown command %s\n" , s);
 			}
-				break;
+			else
+			{
+				printf("error: unknown command %s\n", s);
+			}
+			break;
 		}
 	}
 	return 0;
@@ -121,19 +122,19 @@ void push(double f)
 	{
 		val[sp++] = f;
 	}
-	else 
+	else
 	{
-		printf("error: stack full, can't push %g\n",f);
+		printf("error: stack full, can't push %g\n", f);
 	}
 }
 
-double pop (void)
+double pop(void)
 {
 	if (sp > 0)
 	{
 		return val[--sp];
 	}
-	else 
+	else
 	{
 		printf("error: stack empty\n");
 		return 0.0;
@@ -141,14 +142,15 @@ double pop (void)
 }
 
 //次の演算子あるいは数値の日演算数をとってくる
-int getop (char s[])
+int getop(char s[])
 {
 	int i, c;
 
-	while ((s[0] = c = getch()) == ' ' || c == '\t');
+	while ((s[0] = c = getch()) == ' ' || c == '\t')
+		;
 	s[1] = '\0';
 	i = 0;
-	if (c == '-' && !isdigit(s[++i]))
+	if (c == '-' && !isdigit(s[++i] = c = getch()))
 	{
 		ungetch(c);
 		return '-';
@@ -159,11 +161,13 @@ int getop (char s[])
 	}
 	if (isdigit(c))
 	{
-		while (isdigit(s[++i] = c = getch()));
+		while (isdigit(s[++i] = c = getch()))
+			;
 	}
 	if (c == '.')
 	{
-		while (isdigit(s[++i] = c = getch()));
+		while (isdigit(s[++i] = c = getch()))
+			;
 	}
 	s[i] = '\0';
 	if (c != EOF)
@@ -176,7 +180,7 @@ int getop (char s[])
 //バッファあたりbufたちの関数
 int getch(void)
 {
-	return  (bufp > 0) ? buf[--bufp] : getchar();
+	return (bufp > 0) ? buf[--bufp] : getchar();
 }
 
 void ungetch(int c)
@@ -185,9 +189,8 @@ void ungetch(int c)
 	{
 		printf("ungetch: too many characters\n");
 	}
-	else 
+	else
 	{
 		buf[bufp++] = c;
 	}
 }
-

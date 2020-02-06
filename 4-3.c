@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -27,35 +26,16 @@ void ungetch(int);
 char buf[BUFSIZE];
 int bufp = 0;
 
-#define MAXCHAR 26
-
-//getlineの変更点です。
-#define MAXLINE 1024
-int getline01(char s[], int lim);
-int linecount;
-char line[MAXLINE] = "";
-
 int main()
 {
-	int type, number, charnumber;
-	int flag = 0;
+	int type;
 	double op2;
 	char s[MAXOP];
-	char i[MAXCHAR];
-	char nm[MAXCHAR];
 
 	while ((type = getop(s)) != EOF)
 	{
 		switch (type)
 		{
-		case 'W':
-			charnumber = pop();
-			nm[number] = charnumber;
-			++number;
-			break;
-		case 'R':
-			flag = 1;
-			break;
 		case NUMBER:
 			push(atof(s));
 			break;
@@ -96,29 +76,8 @@ int main()
 		case '\n':
 			printf("\t%.8g\n", pop());
 			break;
-		case '\0':
-			break;
 		default:
-			if (flag == 1)
-			{
-				int search;
-				for (search = 0; search <= MAXCHAR; search++)
-				{
-					if (i[search] == type)
-					{
-						push(nm[search]);
-						break;
-					}
-				}
-			}
-			else if ('a' <= type && type <= 'z')
-			{
-				i[number] = type;
-			}
-			else
-			{
-				printf("error: unknown command %s\n", s);
-			}
+			printf("error: unknown command %s\n", s);
 			break;
 		}
 	}
@@ -158,6 +117,7 @@ int getop(char s[])
 
 	while ((s[0] = c = getch()) == ' ' || c == '\t')
 		;
+
 	s[1] = '\0';
 	i = 0;
 	if (c == '-' && !isdigit(s[++i] = c = getch()))
@@ -188,19 +148,9 @@ int getop(char s[])
 }
 
 //バッファあたりbufたちの関数
-int arraycount = 0;
 int getch(void)
 {
-	if (bufp > 0)
-	{
-		return buf[--bufp];
-	}
-	if (line[arraycount] == '\0')
-	{
-		arraycount = 0;
-		getline01(line, MAXLINE);
-	}
-	return line[arraycount++];
+	return (bufp > 0) ? buf[--bufp] : getchar();
 }
 
 void ungetch(int c)
@@ -213,22 +163,4 @@ void ungetch(int c)
 	{
 		buf[bufp++] = c;
 	}
-}
-
-int getline01(char s[], int lim)
-{
-	int c, i;
-
-	i = 0;
-
-	while (--lim > 0 && (c = getchar()) != EOF && c != '\n')
-	{
-		s[i++] = c;
-	}
-	if (c == '\n')
-	{
-		s[i++] = c;
-	}
-	s[i] = '\0';
-	return i;
 }
